@@ -54,11 +54,11 @@ const getProfanityBlacklistTranscript = async(youtubeUrl) => {
   
     const videoId=getVideoId(youtubeUrl);
   
-    const videoInfo = await fetch(`https://youtube.com/get_video_info?video_id=${videoId}`);
+    const videoInfo = await fetch(youtubeUrl);
     const videoInfoTXT = await videoInfo.text();
-    const videoInfoDecode = decodeURIComponent(videoInfoTXT);
+    console.log(videoInfoTXT);
   
-    const captionTracksStart = videoInfoDecode.indexOf(`{"captionTracks":`);
+    const captionTracksStart = videoInfoTXT.indexOf(`{"captionTracks":`);
 
     if(captionTracksStart==-1){
       return null;
@@ -68,7 +68,7 @@ const getProfanityBlacklistTranscript = async(youtubeUrl) => {
     let openBrackets=1;
     while(openBrackets!=0){
       currentIndex++;
-      currentChar = videoInfoDecode[currentIndex];
+      currentChar = videoInfoTXT[currentIndex];
       if(currentChar=="{"){
         openBrackets++;
       }
@@ -78,7 +78,7 @@ const getProfanityBlacklistTranscript = async(youtubeUrl) => {
     } 
     const captionTracksEnd=currentIndex + 1;
   
-    const captionTracksJson = JSON.parse(videoInfoDecode.substring(captionTracksStart,captionTracksEnd))["captionTracks"];
+    const captionTracksJson = JSON.parse(videoInfoTXT.substring(captionTracksStart,captionTracksEnd))["captionTracks"];
   
     let captionTrack = [];
     for(let i=0;i<captionTracksJson.length;i++){
