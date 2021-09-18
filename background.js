@@ -1,6 +1,6 @@
 const censorBeep = new Audio("censor-beep-10.mp3");
 const filterList = [
-  "[__]",
+  "[ __ ]",
   "anal",
   "anilingus",
   "anus",
@@ -286,6 +286,8 @@ chrome.runtime.onMessage.addListener((msg)=>{
       beepVideo()
   } else if(msg.from=="content" && msg.subject=="unbeepVideo"){
       unbeepVideo()
+  } else if(msg.from=="content" && msg.subject=="setBeepVolume"){
+      setBeepVolume(msg.data);
   } else if(msg.from=="content" && msg.subject=="getBlacklist"){
       getProfanityBlacklistTranscript(msg.data);
   }
@@ -310,6 +312,10 @@ function beepVideo(){
 function unbeepVideo(){
     censorBeep.pause();
     censorBeep.currentTime=0;
+}
+
+function setBeepVolume(volume){
+    censorBeep.volume = volume;
 }
 
 const getProfanityBlacklistTranscript = async(youtubeUrl) => {
@@ -496,8 +502,4 @@ const getProfanityBlacklistTranscript = async(youtubeUrl) => {
           }
       }
       return blacklistTranscript;
-  }
-
-  function getFilterList(){
-
   }

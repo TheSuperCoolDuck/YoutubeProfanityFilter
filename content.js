@@ -78,8 +78,12 @@ function censorVideo(video){
              chrome.runtime.sendMessage({from:"content",subject:"unbeepVideo"});
              isCensoring = false;
         }
+    }else if(isCensoring){
+        chrome.runtime.sendMessage({from:"content",subject:"unbeepVideo"});
+        isCensoring=false;
     }
     
+    chrome.runtime.sendMessage({from:"content",subject:"setBeepVolume",data:video.volume});
 }
 
 function isWithinLine(startTime, duration, currentTime){
