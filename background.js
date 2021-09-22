@@ -342,7 +342,6 @@ const getProfanityBlacklistTranscript = async(youtubeUrl) => {
   
     const videoInfo = await fetch(youtubeUrl);
     const videoInfoTXT = await videoInfo.text();
-    console.log(videoInfoTXT);
   
     const captionTracksStart = videoInfoTXT.indexOf(`{"captionTracks":`);
 

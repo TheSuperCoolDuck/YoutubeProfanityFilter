@@ -1,10 +1,11 @@
 const filter_checkbox = document.getElementById("removeProfanity")
 
-const filterList = ["part","may","made","come","get","did","day","down","long","find","now","its","oil","who","call","been","water","first","than","my"];
-
 chrome.runtime.onMessage.addListener((msg)=>{
   if(msg.from=="content" && msg.subject=="censorState"){
     restorePopupState(msg.data);
+  }
+  if(msg.from=="content" && msg.subject=="disableCheckbox"){
+    disableCheckbox();
   }
 })
 
@@ -16,13 +17,13 @@ window.onload = function() {
 }
 
 function restorePopupState(state){
-  if(state=="cannot"){
-    filter_checkbox.disabled=true;
-    filter_checkbox.classList.add("inactive");
-  } 
-  else{
-    filter_checkbox.checked=state;
-  }
+  filter_checkbox.removeAttribute('disabled');
+  filter_checkbox.checked=state;
+}
+
+function disableCheckbox(){
+  filter_checkbox.setAttribute('disabled','');
+  filter_checkbox.checked=false;
 }
 
 document.addEventListener('DOMContentLoaded', () => {

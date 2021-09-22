@@ -12,13 +12,8 @@ chrome.runtime.onMessage.addListener((msg)=>{
         if(canCensor==null){
             chrome.runtime.sendMessage({from:"content",subject:"getBlacklist",data:window.location.href});
         }
-        else{
-            if(canCensor==true){
-                chrome.runtime.sendMessage({from:"content",subject:"censorState",data:isUsingFilter});
-            }
-            else{
-                chrome.runtime.sendMessage({from:"content",subject:"censorState",data:"cannot"});
-            }
+        else if (canCensor){
+            chrome.runtime.sendMessage({from:"content",subject:"censorState",data:isUsingFilter});
         }
     } 
     else if(msg.from=="background"&&msg.subject=="blacklistTranscript"){
@@ -27,9 +22,6 @@ chrome.runtime.onMessage.addListener((msg)=>{
             blacklistTranscript=msg.data; 
             canCensor=true;
             chrome.runtime.sendMessage({from:"content",subject:"censorState",data:false});
-        } else{
-            canCensor=false;
-            chrome.runtime.sendMessage({from:"content",subject:"censorState",data:"cannot"});
         }
     }
     else if(msg.from=="popup"&&msg.subject=="useFilter") {
@@ -45,11 +37,14 @@ chrome.runtime.onMessage.addListener((msg)=>{
     else if(msg.from=="background"&&msg.subject=="newPage"){
         console.log("new page");
         clearInterval(censorBlacklistLoop);
-        isUsingFilter=null;
-        canCensor=null;
-        isCensoring=null;
-        blacklistTranscript=[];
-        currentTranscriptLine=null; 
+        isUsingFilter = false;
+        canCensor = null;
+        isCensoring = false;
+        blacklistTranscript = [];
+        currentTranscriptLine = null;
+        censorBlacklistLoop = null;
+        defaultMuted = false;
+        chrome.runtime.sendMessage({from:"content",subject:"disableCheckbox"});
     }
 })
     
@@ -70,8 +65,6 @@ function censorVideo(video){
     if(!video.muted){
         defaultMuted=false;
     }
-
-    console.log(defaultMuted);
 
     if(video!=null && !video.paused){
         if(!isCensoring){
