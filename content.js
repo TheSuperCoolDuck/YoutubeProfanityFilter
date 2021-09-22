@@ -17,7 +17,6 @@ chrome.runtime.onMessage.addListener((msg)=>{
         }
     } 
     else if(msg.from=="background"&&msg.subject=="blacklistTranscript"){
-        console.log(msg.data);
         if(msg.data!=null){
             blacklistTranscript=msg.data; 
             canCensor=true;
@@ -25,17 +24,14 @@ chrome.runtime.onMessage.addListener((msg)=>{
         }
     }
     else if(msg.from=="popup"&&msg.subject=="useFilter") {
-        console.log("is censoring");
         useProfanityFilter();
     }
     else if(msg.from=="popup"&&msg.subject=="turnOffFilter") {
-        console.log("not censoring");
         isUsingFilter=null;
         isCensoring=null;
         currentTranscriptLine=null;
     }
     else if(msg.from=="background"&&msg.subject=="newPage"){
-        console.log("new page");
         clearInterval(censorBlacklistLoop);
         isUsingFilter = false;
         canCensor = null;
@@ -70,7 +66,6 @@ function censorVideo(video){
         if(!isCensoring){
             for(let i = 0; i < blacklistTranscript.length; i++) {
                 if(isWithinLine(blacklistTranscript[i]["startTime"], blacklistTranscript[i]["duration"], video.currentTime)) {
-                   console.log(`the word "${blacklistTranscript[i]["text"]}" was filtered for ${blacklistTranscript[i]["duration"]} seconds`);
                    currentTranscriptLine = blacklistTranscript[i];
                    if(!defaultMuted){
                         chrome.runtime.sendMessage({from:"content",subject:"beepVideo"});

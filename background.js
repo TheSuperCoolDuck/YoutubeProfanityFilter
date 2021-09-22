@@ -279,8 +279,6 @@ const filterList = [
   "zoophilia"
   ];
 
-console.log("test");
-
 chrome.runtime.onMessage.addListener((msg)=>{
   if(msg.from=="content" && msg.subject=="beepVideo"){
       beepVideo()
