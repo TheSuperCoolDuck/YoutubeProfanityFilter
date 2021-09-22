@@ -1,6 +1,11 @@
 {
     "name": "Youtube Profanity Filter",
     "version": "0.3",
+    "icons": {
+        "16": "16x16.png",
+        "48": "48x48.png",
+        "128": "128x128.png"
+    },
     "manifest_version": 2,
     "description": "A Profanity Filter for YouTube",
     "content_scripts": [
