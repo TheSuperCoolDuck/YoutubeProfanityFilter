@@ -1,4 +1,5 @@
 const censorBeep = new Audio("censor-beep-10.mp3");
+const beepVolumeMultiplier = 0.5
 const filterList = [
   "[ __ ]",
   "anal",
@@ -313,7 +314,7 @@ function unbeepVideo(){
 }
 
 function setBeepVolume(volume){
-    censorBeep.volume = volume;
+    censorBeep.volume = volume*beepVolumeMultiplier;
 }
 
 const getProfanityBlacklistTranscript = async(youtubeUrl) => {
