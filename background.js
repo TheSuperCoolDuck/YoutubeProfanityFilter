@@ -369,9 +369,7 @@ const getProfanityBlacklistTranscript = async(youtubeUrl) => {
       if(captionTracksJson[i]["vssId"]=="a.en"){
         captionTrack = captionTracksJson[i];
         break;
-       }                                //else if (captionTracksJson[i]["vssId"]==".en") {
-                                        //   captionTrack = captionTracksJson[i];
-                                        // }
+       }
     }
     return captionTrack["baseUrl"];  
   }
@@ -412,62 +410,31 @@ const getProfanityBlacklistTranscript = async(youtubeUrl) => {
       
       let lineStartTime = events[i]["tStartMs"];
       for(let j=0;j<eventLine["segs"].length;j++){
-  
-        //Case -1: Start of line and End of transcript
-        // start time = line start time
-        // duration = line duration
-  
-        // Case 0: Start and End of line
-        // start time = line start time
-        // duration = next line start time - line start time 
-  
-        // Case 1: Start of a line
-        // start time = line start time
-        // duration = next word offset time
-        
-        // Case 2: Middle of a line
-        // start time = line start time + this word offset time
-        // duration = next word offset time - this word offset time
-  
-        // Case 3: End of a line 
-        // start time = line start time + this word offset offset time
-        // duration = next line start time - line start time - this word offset time 
-  
-        //Case 4: End of transcript
-        // start time = line start time + this word offset offset time
-        // duration = line duration - this word offset time
-  
+
         let wordStartTime;
         let wordDuration;
         
         if(eventLine["segs"][j]["tOffsetMs"] == undefined && eventLine["segs"][j+1] == undefined && events[i+1]== undefined){
-          //Case -1:
           wordStartTime = lineStartTime;
           wordDuration =  events[i]["dDurationMs"];
         }
         else if(eventLine["segs"][j]["tOffsetMs"] == undefined && eventLine["segs"][j+1] == undefined){
-          //Case 0:
           wordStartTime = lineStartTime;
           wordDuration =   events[i+1]["tStartMs"] - wordStartTime;
         }
         else if(eventLine["segs"][j]["tOffsetMs"] == undefined && eventLine["segs"][j+1] != undefined){
-          //Case 1:
           wordStartTime = lineStartTime;
           wordDuration = eventLine["segs"][j+1]["tOffsetMs"];
         } 
         else if(eventLine["segs"][j+1] != undefined) {
-          //Case 2:
           wordStartTime = lineStartTime + eventLine["segs"][j]["tOffsetMs"];
           wordDuration = eventLine["segs"][j+1]["tOffsetMs"] - eventLine["segs"][j]["tOffsetMs"];
         }
-        else if(events[i+1] != undefined) 
-        {
-          //Case 3:
+        else if(events[i+1] != undefined) {
           wordStartTime = lineStartTime + eventLine["segs"][j]["tOffsetMs"]
           wordDuration = events[i+1]["tStartMs"] - lineStartTime - eventLine["segs"][j]["tOffsetMs"];
         }
         else {
-          //Case 4:
           wordStartTime = lineStartTime + eventLine["segs"][j]["tOffsetMs"]
           wordDuration = events[i]["dDurationMs"] - eventLine["segs"][j]["tOffsetMs"];
         }

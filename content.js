@@ -1,4 +1,3 @@
-//NOTE: ADD VARIABLES TO CACHE WHEN I AM CENSORING
 let isUsingFilter = false;
 let canCensor = null;
 let isCensoring = false;
